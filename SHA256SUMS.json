@@ -4,7 +4,7 @@
   ".test-output/thinking-demo-frames.json": "decb956fa5d9b81b763a8a70ddceac46960906cc9eee93c281d056076d24dbe3",
   ".test-output/thinking-test.json": "56261900135cad4df770731cdcc13227173b553abe28c523426515c98e7b918e",
   "INSTALL_FOR_CODEX.md": "df84eef4eaa4ed0a4fac9f95e30a4dee6fcacfc7c38fe054e616f078499bc802",
-  "README.md": "6fe84b7d6365bf6aada4080c190f527e0cee78fd844074aaa7e431557c41a63b",
+  "README.md": "0c1217f9a617db9c454ecbf547116378a4eedd80c5e778e1627ab3eb96e14d9c",
   "SOURCES.md": "bc6842716207bcf683011a6c6555d99f70fc15cbd29489d09f57b72bc92b1580",
   "docs/animations.jpg": "8afc1e68f7742718cce7dc6be47c3e84c1136be706ba7e6b449c713f8fbd90e9",
   "hover/hover-failed.png": "4e31ae78f73d49f4e3702081989f7d36caa0eff3bb9cfb68bbb24848ca084ad6",
@@ -46,5 +46,6 @@
   "verification/package-test.json": "a0b4afe26ad6b7cec92c398436fd90093edb5e0374c326451e01d61c42ecc11e",
   "verification/runtime-test.json": "a0923941ee69b9dd3a110e3c2e09742a71e8e1b2602f096526537d36f84077c6",
   "verification/thinking-test.json": "56261900135cad4df770731cdcc13227173b553abe28c523426515c98e7b918e",
+  "verification/transition-test.json": "001183b4d52cda6b5509b54eafdf47ebaa0cca41c7161f1a593d6d2d59838120",
   "verification/visual-review.json": "9def8db6135359a2c97d680a6758cc9e7228a78075bc654df6328c82100dc22f"
 }
