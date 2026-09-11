@@ -19,17 +19,17 @@ function nfPosition(frame, spec) {
 function nfPetRenderer(props) {
   const {source, className, state = "idle", respondToHover = false, lookFrame} = props;
   const spec = source.animationSpec;
-  const [hovered, setHovered] = Ger.useState(false);
-  const reducedMotion = VLe();
-  const current = Ger.useRef(null);
-  const previous = Ger.useRef(null);
-  const snapshot = Ger.useRef(null);
-  const drag = Ger.useRef(null);
-  const pointer = Ger.useRef(null);
-  const sustain = Ger.useRef(null);
-  const [dragActive,setDragActive] = Ger.useState(false);
+  const [hovered, setHovered] = __NF_REACT__.useState(false);
+  const reducedMotion = __NF_REDUCED_MOTION__();
+  const current = __NF_REACT__.useRef(null);
+  const previous = __NF_REACT__.useRef(null);
+  const snapshot = __NF_REACT__.useRef(null);
+  const drag = __NF_REACT__.useRef(null);
+  const pointer = __NF_REACT__.useRef(null);
+  const sustain = __NF_REACT__.useRef(null);
+  const [dragActive,setDragActive] = __NF_REACT__.useState(false);
   const action = dragActive ? '$drag' : respondToHover && hovered ? "jumping" : state;
-  Ger.useEffect(() => {
+  __NF_REACT__.useEffect(() => {
     if (!spec.drag) return;
     const release = event => {
       if (pointer.current === null || (event.type !== 'blur' && event.pointerId !== pointer.current)) return;
@@ -41,7 +41,7 @@ function nfPetRenderer(props) {
     for(const type of types)window.addEventListener(type,release,true);
     return () => {for(const type of types)window.removeEventListener(type,release,true);};
   },[spec,reducedMotion]);
-  Ger.useEffect(() => {
+  __NF_REACT__.useEffect(() => {
     const node = current.current, old = previous.current;
     if (!node || !old) return;
     const before = snapshot.current;
@@ -100,8 +100,8 @@ function nfPetRenderer(props) {
     backgroundSize: `${spec.columns * 100}% ${spec.rows * 100}%`,
     backgroundRepeat: "no-repeat", imageRendering: "auto", pointerEvents: "none"
   };
-  return Ger.createElement("div", {
-    className: K(Uer.Root, className),
+  return __NF_REACT__.createElement("div", {
+    className: __NF_CLASSNAMES__(__NF_PET_STYLES__.Root, className),
     "data-codex-pet-id": source.petId,
     "data-codex-pet-state": action,
     "data-local-animation-version": "1",
@@ -116,8 +116,8 @@ function nfPetRenderer(props) {
       setDragActive(true);
     },
     style: {position: "relative", backgroundImage: "none", imageRendering: "auto"}
-  }, Ger.createElement("div", {ref: current, style: {...layer}}),
-     Ger.createElement("div", {ref: previous, style: {...layer, opacity: 0}}));
+  }, __NF_REACT__.createElement("div", {ref: current, style: {...layer}}),
+     __NF_REACT__.createElement("div", {ref: previous, style: {...layer, opacity: 0}}));
 }
 
 // A sustained gesture plays its introduction once, loops only the middle,

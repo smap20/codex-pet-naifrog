@@ -1,9 +1,9 @@
 async function nfReadAnimation(platform, client, directory, manifestPath) {
   if (!manifestPath) return undefined;
   try {
-    const file = t0(platform, directory, manifestPath);
+    const file = __NF_SAFE_JOIN__(platform, directory, manifestPath);
     if (!file) return undefined;
-    const raw = await X.readFile(file, client);
+    const raw = await __NF_FS__.readFile(file, client);
     if (raw.length > 262144) return undefined;
     const spec = JSON.parse(raw);
     if (spec.version !== 1 || !Number.isInteger(spec.columns) || spec.columns < 1 || spec.columns > 64 ||
@@ -41,12 +41,12 @@ async function nfReadAnimation(platform, client, directory, manifestPath) {
           !Number.isInteger(d.apexFrame) || d.apexFrame < 1 || d.apexFrame >= states[d.state].frames.length-1) return undefined;
       drag={state:d.state,apexFrame:d.apexFrame};
     }
-    const sheet = t0(platform, directory, spec.spritesheetPath);
+    const sheet = __NF_SAFE_JOIN__(platform, directory, spec.spritesheetPath);
     if (!sheet) return undefined;
-    const rawImage = await X.readFileBase64(sheet, client);
+    const rawImage = await __NF_FS__.readFileBase64(sheet, client);
     const encoded = typeof rawImage === "string" ? rawImage : rawImage.toString("base64");
     if (encoded.length > 48 * 1024 * 1024) return undefined;
-    const bytes = Buffer.from(encoded, "base64"), info = r0(bytes);
+    const bytes = Buffer.from(encoded, "base64"), info = __NF_IMAGE_INFO__(bytes);
     if (!info || info.width !== spec.columns * 192 || info.height !== spec.rows * 208) return undefined;
     return {version: 1, columns: spec.columns, rows: spec.rows, states, drag, sustain,
       disableLook: spec.disableLook !== false,
