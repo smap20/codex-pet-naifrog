@@ -1,18 +1,18 @@
 # 奶蛙 Codex Pet · Linux
 
-在 Codex 桌面应用里养一只奶蛙：跟随工作状态自动播放，按住拖动时浮起悬停，松手落下。v4.4 保留完整 1401 帧，并修复眼睛、手掌和脚趾的抠图缺损。
+奶蛙跟随 Codex 工作状态自动播放。v4.5 在长时间思考时只循环挠头，抬手仅播放一次，思考结束后自然放下；按住拖动则浮起悬停，松手落下。
 
-![动画一览](docs/animations.jpg)
+![持续挠头](thinking-loop.webp)
 
-**[下载 Linux 安装包](https://github.com/smap20/codex-pet-naifrog/releases/download/v4.4/naifrog-v4.4-linux.zip)** · [版本与校验文件](https://github.com/smap20/codex-pet-naifrog/releases/tag/v4.4) · [修复前后视频](preview.mp4)
+**[下载 v4.5 Linux 安装包](https://github.com/smap20/codex-pet-naifrog/releases/download/v4.5/naifrog-v4.5-linux.zip)** · [版本与校验文件](https://github.com/smap20/codex-pet-naifrog/releases/tag/v4.5) · [思考动作前后对比](thinking-preview.mp4) · [抠图修复对比](preview.mp4)
 
-将 ZIP 发给朋友，在他的 Codex 中附上文件并发送：
+把 ZIP 附给朋友的 Codex 并发送：
 
 > 请解压这个奶蛙安装包，阅读 INSTALL_FOR_CODEX.md，检查兼容性并安装。
 
-也可以克隆本仓库，在仓库目录运行 `bash install.sh`。当前适配 **Linux Codex App 26.903.61454，且程序指纹必须匹配**；不是所有同版本发行构建都能直接安装。安装器会先检查，失败时保留现状。
+也可以克隆仓库后运行 `bash install.sh`。适配 **Linux Codex App 26.903.61454 且程序指纹匹配的构建**。v4.4 用户可直接升级，安装器会保留回退路径。
 
-这是第三方本地扩展，与 OpenAI 没有关联。不同来源的素材保留各自许可状态，详见 [SOURCES.md](SOURCES.md)；本仓库没有将全部素材统一声明为 MIT 或公有领域。
+这是第三方本地扩展，与 OpenAI 没有关联。不同来源的素材保留各自许可状态，见 [SOURCES.md](SOURCES.md)；本仓库没有将全部素材统一声明为 MIT 或公有领域。
 
 ---
 
@@ -21,6 +21,14 @@
 完整的 1401 帧动画，包含挠头、聆听、说话、摸肚子、眩晕、漂浮和捧腹大笑。已经修复瞳孔、手掌、手指与脚趾误抠。动作跟随 Codex 状态自动播放；拖动时按住升起并悬停，松手才落下。
 
 **适用：Linux，Codex App `26.903.61454`，并且程序指纹匹配。** 其他构建会在检查阶段停止，保持原文件。不能只复制 `pet/` 来得到完整动画；本包还会安装相应播放器扩展。
+
+## v4.5：持续思考时只循环挠头
+
+抬手只播放一次，随后只循环原始第 22–49 帧。思考结束后从当前姿势继续到放手，再进入最新的任务状态；正常退出最长约 2.4 秒。短任务在抬手途中结束时原路放回，放手途中又开始思考则从当前位置重新接上。拖动和鼠标交互仍优先响应。
+
+动画图集沿用 v4.4，所有修复、1401 帧、尺寸、锚点和帧速保持不变。仅增加持续动作的播放规则。`thinking-preview.mp4` 展示真实播放器的前后对比。
+
+本安装器同时支持原版 App 和已验证的 v4.4 播放器。用上一版安装包安装的用户可直接运行本版 `bash install.sh` 升级；卸载 v4.5 会恢复升级前的 v4.4 和安装记录，再次卸载可恢复更早的状态。
 
 ## 最简单：交给你的 Codex
 
@@ -66,7 +74,7 @@ bash uninstall.sh
 
 ## 包里有什么
 
-- `pet/`：当前 v4.4 素材，以及列表读取需要的标准精灵图。
+- `pet/`：当前 v4.5 素材，以及列表读取需要的标准精灵图。
 - `runtime/`、`install.py`：完整动画加载器、拖动控制器和安装源码。
 - `preview.mp4`：眼睛与手部修复前后对比。
 - `verification/`：原动画检查记录及此安装包的独立沙盒验证结果。

@@ -7526,5 +7526,10 @@
   "drag": {
     "state": "running-right",
     "apexFrame": 52
+  },
+  "sustain": {
+    "state": "running",
+    "loopStart": 22,
+    "loopEnd": 49
   }
 }

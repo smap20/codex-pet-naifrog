@@ -17,7 +17,8 @@ import uuid
 BUNDLE = Path(__file__).resolve().parent
 VERSION = '26.903.61454'
 ORIGINAL = '43d2e0e6d8cc1796a675f769c04f09038cdb0d1922ad358f852027979e9bd8ff'
-PATCHED = 'c6f78ad4dd35b8429b07bc258f5b45e1990982d93fed72242ecc1e7766d14dff'
+PREVIOUS = 'c6f78ad4dd35b8429b07bc258f5b45e1990982d93fed72242ecc1e7766d14dff'
+PATCHED = 'f0b6db965d022705f85fadec54296f6cdb3e2293f748230d260c278b6a176d5e'
 MEMBERS = {'.vite/build/src-J2PvP4xj.js': '4cc980cd737b02f999b9fe8d9757c37d2ce86c928043f19f46d56cc52bce8f66',
            'webview/assets/app-initial-5738ed8d0dba.js': '2a200058c034d70daeb6874c40e8b708879dd1060c9419c6271d91b0bfdc818f'}
 
@@ -86,6 +87,14 @@ def once(text, old, new):
 
 def patch_members(archive):
     originals = {name: archive.read(name) for name in MEMBERS}
+    if sha(archive.path) == PREVIOUS:
+        result = {}
+        for member, filename in [('.vite/build/src-J2PvP4xj.js', 'animation-loader.js'),
+                                 ('webview/assets/app-initial-5738ed8d0dba.js', 'animation-runtime.js')]:
+            before = (BUNDLE/'runtime'/('v4.4-' + filename)).read_text()
+            after = (BUNDLE/'runtime'/filename).read_text()
+            result[member] = once(originals[member].decode(), before, after).encode()
+        return result
     for name, data in originals.items():
         require(hashlib.sha256(data).hexdigest() == MEMBERS[name], '代码指纹不匹配：' + name)
     loader = originals['.vite/build/src-J2PvP4xj.js'].decode()
@@ -105,7 +114,7 @@ def patch_members(archive):
     return {'.vite/build/src-J2PvP4xj.js': loader.encode(), 'webview/assets/app-initial-5738ed8d0dba.js': ui.encode()}
 
 def build_archive(source, destination):
-    require(sha(source) == ORIGINAL, '原始 App 指纹不匹配。')
+    require(sha(source) in [ORIGINAL, PREVIOUS], '原始 App 指纹不匹配。')
     archive = Asar(source)
     mods = patch_members(archive)
     offset = 0
@@ -158,7 +167,7 @@ def inspect(app):
     metadata = json.loads(archive.read('package.json'))
     digest = sha(app)
     return {'app': str(app), 'version': metadata.get('version'), 'sha256': digest,
-        'supported': metadata.get('name') == 'openai-codex-electron' and metadata.get('version') == VERSION and digest in [ORIGINAL, PATCHED],
+        'supported': metadata.get('name') == 'openai-codex-electron' and metadata.get('version') == VERSION and digest in [ORIGINAL, PREVIOUS, PATCHED],
         'alreadyPatched': digest == PATCHED}
 
 def tree_hashes(folder):
@@ -203,14 +212,19 @@ def install(app, home):
     state_root = home/'naifrog-installer'
     state_file = state_root/'installed.json'
     desired = tree_hashes(BUNDLE/'pet')
+    prior_state = None
     if state_file.exists():
         previous = json.loads(state_file.read_text())
         require(previous.get('status') in ['installed', 'uninstalled'], '上次安装未结束，请按记录恢复：' + str(state_file))
         if previous['status'] == 'installed':
             require(previous['app'] == str(app) and previous['pet'] == str(pet), '上次安装使用了其他路径；请先卸载该次安装。')
-            require(info['sha256'] == PATCHED and tree_hashes(pet) == desired, '安装后的 App 或宠物已改变；请保留现状并检查 installed.json。')
-            print('已安装同一版奶蛙 v4.4，无需重复操作。')
-            return previous
+            if info['sha256'] == PATCHED and tree_hashes(pet) == desired:
+                print('已安装同一版奶蛙 v4.5，无需重复操作。')
+                return previous
+            require(previous['revision'] == 'v4.4' and info['sha256'] == PREVIOUS and
+                    tree_hashes(pet) == previous['installedPetFiles'],
+                    '安装后的 App 或宠物已改变；请保留现状并检查 installed.json。')
+            prior_state = previous
     original_pet = tree_hashes(pet)
     had_pet = pet.exists()
     state_root.mkdir(parents=True, exist_ok=True)
@@ -224,19 +238,21 @@ def install(app, home):
     pet.parent.mkdir(parents=True, exist_ok=True)
     stage = pet.with_name('naifrog-stage-' + uuid.uuid4().hex)
     displaced = pet.with_name('naifrog-previous-' + uuid.uuid4().hex)
-    record = {'status':'prepared', 'revision':'v4.4', 'app':str(app), 'pet':str(pet), 'backup':str(backup),
+    record = {'status':'prepared', 'revision':'v4.5', 'app':str(app), 'pet':str(pet), 'backup':str(backup),
         'beforeAppSha256':info['sha256'], 'installedAppSha256':PATCHED, 'hadPet':had_pet,
         'beforePetFiles':original_pet, 'installedPetFiles':desired, 'restartRequired':True}
+    if prior_state:
+        record['previousInstallation'] = prior_state
     app_changed = False
     pet_changed = False
     write_json(state_file, record)
     try:
         shutil.copytree(BUNDLE/'pet', stage)
         require(tree_hashes(stage) == desired, '宠物暂存校验失败。')
-        if info['sha256'] == ORIGINAL:
+        if info['sha256'] != PATCHED:
             print('正在本地生成完整动画播放器扩展…', flush=True)
             build_archive(backup/'app.asar', backup/'patched.asar')
-            replace_app(backup/'patched.asar', app, ORIGINAL)
+            replace_app(backup/'patched.asar', app, info['sha256'])
             app_changed = True
         require(sha(app) == PATCHED and tree_hashes(pet) == original_pet, '目标在安装期间改变；拒绝继续。')
         if had_pet:
@@ -255,7 +271,7 @@ def install(app, home):
         if app_changed:
             replace_app(backup/'app.asar', app, PATCHED)
         record['status'] = 'uninstalled'
-        write_json(state_file, record)
+        write_json(state_file, prior_state or record)
         raise
     finally:
         if stage.exists():
@@ -300,7 +316,7 @@ def uninstall(home):
             os.replace(stage, pet)
         require(tree_hashes(pet) == record['beforePetFiles'], '卸载后的宠物校验失败。')
         record['status'] = 'uninstalled'
-        write_json(state_file, record)
+        write_json(state_file, record.get('previousInstallation') or record)
     except BaseException:
         if current.exists():
             if pet.exists():
@@ -317,7 +333,7 @@ def uninstall(home):
     print('已恢复安装前的 App 和宠物。请完全退出并重新打开 Codex。备份保留。')
 
 def main():
-    parser = argparse.ArgumentParser(description='奶蛙 v4.4 Linux 离线安装包')
+    parser = argparse.ArgumentParser(description='奶蛙 v4.5 Linux 离线安装包')
     parser.add_argument('command', choices=['check','install','uninstall'], nargs='?', default='check')
     parser.add_argument('--app', help='Codex resources/app.asar 的实际路径')
     parser.add_argument('--codex-home', default=os.environ.get('CODEX_HOME', str(Path.home()/'.codex')))

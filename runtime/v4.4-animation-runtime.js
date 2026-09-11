@@ -26,7 +26,6 @@ function nfPetRenderer(props) {
   const snapshot = Ger.useRef(null);
   const drag = Ger.useRef(null);
   const pointer = Ger.useRef(null);
-  const sustain = Ger.useRef(null);
   const [dragActive,setDragActive] = Ger.useState(false);
   const action = dragActive ? '$drag' : respondToHover && hovered ? "jumping" : state;
   Ger.useEffect(() => {
@@ -46,31 +45,18 @@ function nfPetRenderer(props) {
     if (!node || !old) return;
     const before = snapshot.current;
     const start = performance.now();
-    let normalStart = start;
-    // User interactions take precedence; task-state changes let the thinking
-    // gesture finish naturally. The controller survives effect rerenders.
-    if (!spec.sustain || reducedMotion || action === '$drag' ||
-        (respondToHover && hovered) || sustain.current?.spec !== spec) sustain.current = null;
-    if (spec.sustain && !reducedMotion && action === spec.sustain.state && !sustain.current)
-      sustain.current = nfSustainBegin(spec, start);
     const fade = reducedMotion ? 0 : spec.transitionMs;
     old.style.backgroundPosition = before ? before.position : "0% 0%";
     old.style.backgroundImage = before ? before.image : "none";
     let raf, transitionStart = start, hasPrevious = Boolean(before), lastState = before?.stateKey, lastFrame = null, activeFade = fade;
     const draw = now => {
-      let elapsed = now - normalStart;
+      const elapsed = now - start;
       let dragged = action === '$drag' && drag.current ? nfDragFrame(spec,drag.current,now) : null;
       if (action === '$drag' && !dragged) {
         drag.current=null;setDragActive(false);
         return;
       }
-      let thinking = sustain.current ? nfSustainFrame(spec, sustain.current, action, now) : null;
-      if (sustain.current && !thinking) {
-        sustain.current = null;
-        normalStart = now;
-        elapsed = 0;
-      }
-      const frame = dragged || thinking || (!spec.disableLook && lookFrame
+      const frame = dragged || (!spec.disableLook && lookFrame
         ? {row: lookFrame.rowIndex, column: lookFrame.columnIndex, stateKey: "look"}
         : nfFrameAt(spec, action, reducedMotion ? 0 : elapsed));
       const position = nfPosition(frame, spec);
@@ -118,56 +104,6 @@ function nfPetRenderer(props) {
     style: {position: "relative", backgroundImage: "none", imageRendering: "auto"}
   }, Ger.createElement("div", {ref: current, style: {...layer}}),
      Ger.createElement("div", {ref: previous, style: {...layer, opacity: 0}}));
-}
-
-// A sustained gesture plays its introduction once, loops only the middle,
-// and finishes from the displayed pose when the requested state changes.
-function nfSustainBegin(spec, now) {
-  return {spec, phase:'intro', start:now, requested:spec.sustain.state,
-    indices:nfDragRange(0,spec.sustain.loopEnd)};
-}
-function nfSustainSample(spec, control, now) {
-  const config=spec.sustain, frames=spec.states[config.state].frames;
-  let elapsed=Math.max(0,now-control.start);
-  let length=control.indices.reduce((n,i)=>n+frames[i].durationMs,0);
-  if (elapsed >= length && control.phase !== 'outro') {
-    if (control.phase !== 'loop') {
-      control.start+=length;
-      elapsed-=length;
-      control.phase='loop';
-      control.indices=nfDragRange(config.loopStart,config.loopEnd);
-      length=control.indices.reduce((n,i)=>n+frames[i].durationMs,0);
-    }
-    elapsed%=length;
-  }
-  for (const index of control.indices) {
-    if (elapsed < frames[index].durationMs) return {index,done:false};
-    elapsed-=frames[index].durationMs;
-  }
-  return {index:control.indices[control.indices.length-1],done:true};
-}
-function nfSustainFrame(spec, control, requested, now) {
-  const config=spec.sustain, frames=spec.states[config.state].frames;
-  let sample=nfSustainSample(spec,control,now);
-  if (requested === config.state && control.requested !== requested) {
-    control.start=now;
-    control.phase='resume';
-    // If the hand was already lowering, retrace that same motion toward the
-    // loop boundary. No new raise/lower cycle and no teleport to frame zero.
-    control.indices=nfDragRange(sample.index,config.loopEnd);
-    sample={index:sample.index,done:false};
-  } else if (requested !== config.state && control.phase !== 'outro') {
-    control.start=now;
-    control.phase='outro';
-    control.indices=sample.index < config.loopStart
-      ? nfDragRange(sample.index,0)
-      : nfDragRange(sample.index,frames.length-1);
-    sample={index:sample.index,done:false};
-  }
-  control.requested=requested;
-  if (sample.done && control.phase === 'outro') return null;
-  return {...frames[sample.index],stateKey:config.state,
-    sustainIndex:sample.index,sustainPhase:control.phase};
 }
 
 // Sample only original float frames. Pointer ownership, not move frequency,

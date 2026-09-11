@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "introMs": 2083,
+  "loopMs": 1166,
+  "maxExitMs": 2420,
+  "checks": [
+    "original intro exactly once",
+    "only frames22-49 during sustained work up to24h",
+    "every-frame exit preserves current pose",
+    "early raise reverses to rest",
+    "exit finishes in original frame order",
+    "latest target begins at frame zero",
+    "resume lowering retraces same poses into loop",
+    "rerenders retain phase",
+    "drag and hover preempt immediately",
+    "reduced motion and cleanup",
+    "preview exported from exact renderer effects"
+  ]
+}

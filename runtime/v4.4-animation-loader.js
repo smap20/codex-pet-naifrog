@@ -25,15 +25,6 @@ async function nfReadAnimation(platform, client, directory, manifestPath) {
         frames: state.frames.map(f => ({row: f.row ?? state.row, column: f.column, durationMs: f.durationMs, transitionMs: f.transitionMs || 0}))};
     }
     if (!states.idle.loop) return undefined;
-    let sustain;
-    if (spec.sustain !== undefined) {
-      const s=spec.sustain;
-      if (!s || s.state !== 'running' || !states[s.state]?.loop ||
-          !Number.isInteger(s.loopStart) || !Number.isInteger(s.loopEnd) ||
-          s.loopStart < 1 || s.loopEnd <= s.loopStart ||
-          s.loopEnd >= states[s.state].frames.length-1) return undefined;
-      sustain={state:s.state,loopStart:s.loopStart,loopEnd:s.loopEnd};
-    }
     let drag;
     if (spec.drag !== undefined) {
       const d=spec.drag;
@@ -48,7 +39,7 @@ async function nfReadAnimation(platform, client, directory, manifestPath) {
     if (encoded.length > 48 * 1024 * 1024) return undefined;
     const bytes = Buffer.from(encoded, "base64"), info = r0(bytes);
     if (!info || info.width !== spec.columns * 192 || info.height !== spec.rows * 208) return undefined;
-    return {version: 1, columns: spec.columns, rows: spec.rows, states, drag, sustain,
+    return {version: 1, columns: spec.columns, rows: spec.rows, states, drag,
       disableLook: spec.disableLook !== false,
       transitionMs: Number.isFinite(spec.transitionMs) ? Math.max(0, Math.min(500, spec.transitionMs)) : 180,
       spritesheetDataUrl: `data:${info.mimeType};base64,${encoded}`};

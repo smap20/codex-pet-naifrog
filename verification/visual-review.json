@@ -1,64 +1,27 @@
 {
   "verdict": "pass",
-  "reviewer": "v44_final_qa",
-  "reviewedAt": "2026-09-11T05:46:10.737526+00:00",
-  "atlasSha256": "48bc3dbbe68823d9f3e3063180c95fe934b623f04e9628c293bda4adea39c898",
-  "scope": "Independent final visual acceptance of an existing source-video matte repair; no generated or redrawn imagery.",
-  "personallyInspected": [
-    {
-      "range": "legacy-laugh 409–454 inclusive (all 46 frames)",
-      "method": "Four freshly generated source RGB/current RGBA side-by-side contact sheets, checkerboard composite",
-      "verdict": "pass",
-      "finding": "The newly retained floor shadow is absent. Bottom silhouette, hands, feet and side-eye details remain consistent with source; no new body loss is visible."
-    },
-    {
-      "range": "Final packaged jumping/laugh frames 128, 135, 0, 215, 456, 420, 425, 430",
-      "method": "Decoded animation-v4.4.webp; cropped exact 192×208 cells using adjacent animation JSON frames",
-      "verdict": "pass",
-      "finding": "Hands, toe tips and green side eyes are readable and intact at actual cell size. All eight cells have zero nontransparent edge pixels; no cell clipping."
-    },
-    {
-      "range": "Final running/scratch preview frames 16, 28, 60, 67; final running-right/float preview frames 0, 9, 52, 66, 75, 88",
-      "method": "Frame extraction from final animated WebP previews at 192×208; preview file hashes checked unchanged after ready notice",
-      "verdict": "pass",
-      "finding": "Pupils/irises remain opaque and readable through head and body movement, including floating apex frame 52."
-    }
+  "scope": "Independent visual review of unchanged source scratch frames and v4.5 playback timing. Ordered normal-size loop contact sheet, seam49-to22, and actual-renderer MP4 frame samples covering intro, sustained thinking, normal exit, early exit and reentry. This is a bounded sampled visual review, not a new whole-atlas cutout/geometry review.",
+  "observations": [
+    "Frames22-49 keep the scratching hand beside the head with small wrist/elbow and body variation; they never lower to rest. Renderer samples throughout 3-18 seconds retain that same raised-hand silhouette.",
+    "The49-to22 seam preserves hand-to-head contact, head position, body scale and planted feet. Small source-pose variation is comparable to neighboring scratch poses; no conspicuous registration jump or silhouette snap is apparent at normal size.",
+    "The initial raise occurs once. The18-second normal exit continues the raised pose and original lowering sequence, reaches rest, then enters waiting.",
+    "The24.5-second early exit retraces the partially raised arm toward rest before review. No abrupt hand teleport is visible in the sampled sequence.",
+    "The32.4-second reentry stays near the head, reverses the incipient exit and resumes the scratch loop without a second full raise.",
+    "The renderer trace confirms every dominant sustained-thinking frame from3.1to18seconds is running index22-49."
   ],
-  "inheritedPriorIndependentQA": {
-    "evidence": "qa/prior-independent-review.json",
-    "reviewer": "v44_matte_qa",
-    "ranges": [
-      "All seven MyNaiwa source clips, including scratch 0–79, float 0–88 and dizzy 0–123",
-      "All legacy-laugh 0–461 source/current frames except the subsequently corrected lying-shadow defect",
-      "Detailed hands 115–155, raised-hand gaps 210–254, late pupils 420+ and feet"
-    ],
-    "qualification": "These full-clip reviews are inherited, not claimed as personally repeated by this reviewer. The sole inherited blocker, lying shadow 409–454, was independently rechecked on final source RGBA and passes."
-  },
-  "deterministicEvidence": {
-    "frameAudit": "frame-audit.json",
-    "passed": true,
-    "frameCount": 1401,
-    "manifestOnlyChangesAtlasPath": true,
-    "transformsUnchanged": true,
-    "allFrameMaxAlphaDropZero": true,
-    "previewAudit": "preview-audit.json",
-    "cellMetrics": "qa/final-independent/atlas-cell-metrics.json"
-  },
-  "acceptedSourceLimitations": [
-    "Float frames 65–75 contain original landing-dust gray toe overlays. They are source effects, not new matte errors, and are intentionally retained."
+  "accepted_limitations": [
+    "Ordinary state crossfades briefly soften/double the torso silhouette during the final handoff to waiting/review; this is outside the sustained scratch-loop seam and does not break pose continuity.",
+    "Exit completion intentionally takes the remaining original motion, with the runtime test reporting a maximum2.42seconds. This is acceptable for the requested natural lowering.",
+    "The reentry demo reverses near frame50, before substantial lowering. A deeper lowering reentry around frame64 is covered by runtime checks, not a separate visual sample."
   ],
-  "preservation": "Existing size, frame counts, timing and dragging behavior are retained; this visual review does not independently retest runtime dragging. Restoration uses original source pixels; no AI redraw.",
-  "artifacts": [
-    "qa/final-independent/lying-1.jpg",
-    "qa/final-independent/lying-2.jpg",
-    "qa/final-independent/lying-3.jpg",
-    "qa/final-independent/lying-4.jpg",
-    "qa/final-independent/atlas-key-cells.png",
-    "qa/final-independent/preview-eyes.png"
+  "evidence": [
+    "qa/loop-contact.jpg",
+    "qa/loop-seam.jpg",
+    "qa/qa-long-exit.jpg",
+    "qa/qa-early-reentry.jpg",
+    "thinking-comparison.mp4",
+    "thinking-demo-frames.json",
+    "thinking-test.json"
   ],
-  "previewSha256": {
-    "running": "e56d5e699976eefb3e6e98d536ab8a4ded879420ea655f0b7cc70b368fae782c",
-    "running-right": "8cb9ce5e80aa8285ca42d1e2f33e9e895a13261cc7676f1d6ff886bf00e4f519"
-  },
-  "blockingFindings": []
+  "production_images_edited": false
 }
