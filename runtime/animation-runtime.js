@@ -28,7 +28,7 @@ function nfPetRenderer(props) {
   const pointer = __NF_REACT__.useRef(null);
   const sustain = __NF_REACT__.useRef(null);
   const [dragActive,setDragActive] = __NF_REACT__.useState(false);
-  const action = dragActive ? '$drag' : respondToHover && hovered ? "jumping" : state;
+  const action = dragActive ? '$drag' : respondToHover && hovered ? "waving" : state;
   __NF_REACT__.useEffect(() => {
     if (!spec.drag) return;
     const release = event => {
