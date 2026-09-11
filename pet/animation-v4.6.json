@@ -4,7 +4,7 @@
   "rows": 22,
   "cellWidth": 192,
   "cellHeight": 208,
-  "spritesheetPath": "animation-v4.4.webp",
+  "spritesheetPath": "animation-v4.6.webp",
   "disableLook": true,
   "transitionMs": 180,
   "states": {
@@ -6362,239 +6362,14 @@
       ]
     },
     "waiting": {
-      "row": 6,
+      "row": 7,
       "loop": true,
       "iterations": 1,
       "frames": [
         {
-          "row": 6,
-          "column": 57,
-          "durationMs": 42
-        },
-        {
-          "row": 6,
-          "column": 58,
-          "durationMs": 41
-        },
-        {
-          "row": 6,
-          "column": 59,
-          "durationMs": 42
-        },
-        {
-          "row": 6,
-          "column": 60,
-          "durationMs": 42
-        },
-        {
-          "row": 6,
-          "column": 61,
-          "durationMs": 41
-        },
-        {
-          "row": 6,
-          "column": 62,
-          "durationMs": 42
-        },
-        {
-          "row": 6,
-          "column": 63,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 0,
-          "durationMs": 41
-        },
-        {
-          "row": 7,
-          "column": 1,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 2,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 3,
-          "durationMs": 41
-        },
-        {
-          "row": 7,
-          "column": 4,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 5,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 6,
-          "durationMs": 41
-        },
-        {
-          "row": 7,
-          "column": 7,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 8,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 9,
-          "durationMs": 41
-        },
-        {
-          "row": 7,
-          "column": 10,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 11,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 12,
-          "durationMs": 41
-        },
-        {
-          "row": 7,
-          "column": 13,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 14,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 15,
-          "durationMs": 41
-        },
-        {
-          "row": 7,
-          "column": 16,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 17,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 18,
-          "durationMs": 41
-        },
-        {
-          "row": 7,
-          "column": 19,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 20,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 21,
-          "durationMs": 41
-        },
-        {
-          "row": 7,
-          "column": 22,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 23,
-          "durationMs": 42
-        },
-        {
           "row": 7,
           "column": 24,
-          "durationMs": 41
-        },
-        {
-          "row": 7,
-          "column": 25,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 26,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 27,
-          "durationMs": 41
-        },
-        {
-          "row": 7,
-          "column": 28,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 29,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 30,
-          "durationMs": 41
-        },
-        {
-          "row": 7,
-          "column": 31,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 32,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 33,
-          "durationMs": 41
-        },
-        {
-          "row": 7,
-          "column": 34,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 35,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 36,
-          "durationMs": 41
-        },
-        {
-          "row": 7,
-          "column": 37,
-          "durationMs": 42
-        },
-        {
-          "row": 7,
-          "column": 38,
-          "durationMs": 42
+          "durationMs": 1000
         }
       ]
     },
@@ -7531,5 +7306,12 @@
     "state": "running",
     "loopStart": 22,
     "loopEnd": 49
-  }
+  },
+  "transitions": [
+    {
+      "from": "waiting",
+      "to": "running",
+      "animation": "jumping"
+    }
+  ]
 }

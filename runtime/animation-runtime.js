@@ -27,6 +27,8 @@ function nfPetRenderer(props) {
   const drag = Ger.useRef(null);
   const pointer = Ger.useRef(null);
   const sustain = Ger.useRef(null);
+  const transition = Ger.useRef(null);
+  const previousRequested = Ger.useRef(null);
   const [dragActive,setDragActive] = Ger.useState(false);
   const action = dragActive ? '$drag' : respondToHover && hovered ? "jumping" : state;
   Ger.useEffect(() => {
@@ -47,6 +49,11 @@ function nfPetRenderer(props) {
     const before = snapshot.current;
     const start = performance.now();
     let normalStart = start;
+    const transitionKey = `${previousRequested.current||''}->${action}`;
+    if (spec.transitions?.[transitionKey] && action !== '$drag') {
+      transition.current = {from:previousRequested.current,to:action,animation:spec.transitions[transitionKey],start};
+    }
+    previousRequested.current = action;
     // User interactions take precedence; task-state changes let the thinking
     // gesture finish naturally. The controller survives effect rerenders.
     if (!spec.sustain || reducedMotion || action === '$drag' ||
@@ -64,13 +71,20 @@ function nfPetRenderer(props) {
         drag.current=null;setDragActive(false);
         return;
       }
-      let thinking = sustain.current ? nfSustainFrame(spec, sustain.current, action, now) : null;
+      let transitionFrame = null;
+      if (transition.current) {
+        const tr=transition.current, animation=spec.states[tr.animation];
+        const length=animation.frames.reduce((n,f)=>n+f.durationMs,0);
+        if (now-tr.start < length) transitionFrame=nfFrameAt(spec,tr.animation,now-tr.start);
+        else transition.current=null;
+      }
+      let thinking = !transitionFrame && sustain.current ? nfSustainFrame(spec, sustain.current, action, now) : null;
       if (sustain.current && !thinking) {
         sustain.current = null;
         normalStart = now;
         elapsed = 0;
       }
-      const frame = dragged || thinking || (!spec.disableLook && lookFrame
+      const frame = dragged || transitionFrame || thinking || (!spec.disableLook && lookFrame
         ? {row: lookFrame.rowIndex, column: lookFrame.columnIndex, stateKey: "look"}
         : nfFrameAt(spec, action, reducedMotion ? 0 : elapsed));
       const position = nfPosition(frame, spec);

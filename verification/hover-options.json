@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "options": [
+    {
+      "id": "jumping",
+      "label": "捧腹大笑 · 现用悬停",
+      "frames": 462,
+      "sourceState": "jumping"
+    },
+    {
+      "id": "waving",
+      "label": "摸肚子 · 轻松招呼",
+      "frames": 137,
+      "sourceState": "waving"
+    },
+    {
+      "id": "failed",
+      "label": "眩晕 · 调皮反应",
+      "frames": 124,
+      "sourceState": "failed"
+    },
+    {
+      "id": "running-right",
+      "label": "漂浮 · 轻轻浮起",
+      "frames": 89,
+      "sourceState": "running-right"
+    }
+  ],
+  "note": "All options reuse current transparent atlas frames; no binding changed by this preview."
+}

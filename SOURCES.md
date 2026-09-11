@@ -23,7 +23,3 @@ Modifications: white-background extraction, protected raised-hand negative space
 `runtime/` and `install.py` implement the local optional atlas player, pointer-held floating behavior, version checking, offline patching, backup and rollback. They are provided as readable source for this package. No OpenAI application binary is redistributed. These files do not change the license status of the source character assets.
 
 Historical provenance is preserved without asserting a broader license than the sources provide. The installer does not download or send data.
-
-## v4.5 playback change
-
-The v4.4 atlas is byte-identical. Only the optional sustained-gesture timeline was added: one introduction, loop original scratch frames22–49, finish from the displayed pose on exit, reverse partial raises or lowering on interrupted transitions. No new image synthesis or matte edits.

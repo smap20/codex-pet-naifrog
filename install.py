@@ -18,7 +18,7 @@ BUNDLE = Path(__file__).resolve().parent
 VERSION = '26.903.61454'
 ORIGINAL = '43d2e0e6d8cc1796a675f769c04f09038cdb0d1922ad358f852027979e9bd8ff'
 PREVIOUS = 'c6f78ad4dd35b8429b07bc258f5b45e1990982d93fed72242ecc1e7766d14dff'
-PATCHED = 'f0b6db965d022705f85fadec54296f6cdb3e2293f748230d260c278b6a176d5e'
+PATCHED = 'b1a8a5af12ea8489a8642539727eed2bcf7bdf1c2d114a27eedfaeb3ba8dd51f'
 MEMBERS = {'.vite/build/src-J2PvP4xj.js': '4cc980cd737b02f999b9fe8d9757c37d2ce86c928043f19f46d56cc52bce8f66',
            'webview/assets/app-initial-5738ed8d0dba.js': '2a200058c034d70daeb6874c40e8b708879dd1060c9419c6271d91b0bfdc818f'}
 
@@ -91,7 +91,7 @@ def patch_members(archive):
         result = {}
         for member, filename in [('.vite/build/src-J2PvP4xj.js', 'animation-loader.js'),
                                  ('webview/assets/app-initial-5738ed8d0dba.js', 'animation-runtime.js')]:
-            before = (BUNDLE/'runtime'/('v4.4-' + filename)).read_text()
+            before = (BUNDLE/'runtime'/('v4.5-' + filename)).read_text()
             after = (BUNDLE/'runtime'/filename).read_text()
             result[member] = once(originals[member].decode(), before, after).encode()
         return result
@@ -219,7 +219,7 @@ def install(app, home):
         if previous['status'] == 'installed':
             require(previous['app'] == str(app) and previous['pet'] == str(pet), '上次安装使用了其他路径；请先卸载该次安装。')
             if info['sha256'] == PATCHED and tree_hashes(pet) == desired:
-                print('已安装同一版奶蛙 v4.5，无需重复操作。')
+                print('已安装同一版奶蛙 v4.6，无需重复操作。')
                 return previous
             require(previous['revision'] == 'v4.4' and info['sha256'] == PREVIOUS and
                     tree_hashes(pet) == previous['installedPetFiles'],
@@ -238,7 +238,7 @@ def install(app, home):
     pet.parent.mkdir(parents=True, exist_ok=True)
     stage = pet.with_name('naifrog-stage-' + uuid.uuid4().hex)
     displaced = pet.with_name('naifrog-previous-' + uuid.uuid4().hex)
-    record = {'status':'prepared', 'revision':'v4.5', 'app':str(app), 'pet':str(pet), 'backup':str(backup),
+    record = {'status':'prepared', 'revision':'v4.6', 'app':str(app), 'pet':str(pet), 'backup':str(backup),
         'beforeAppSha256':info['sha256'], 'installedAppSha256':PATCHED, 'hadPet':had_pet,
         'beforePetFiles':original_pet, 'installedPetFiles':desired, 'restartRequired':True}
     if prior_state:
@@ -333,7 +333,7 @@ def uninstall(home):
     print('已恢复安装前的 App 和宠物。请完全退出并重新打开 Codex。备份保留。')
 
 def main():
-    parser = argparse.ArgumentParser(description='奶蛙 v4.5 Linux 离线安装包')
+    parser = argparse.ArgumentParser(description='奶蛙 v4.6 Linux 离线安装包')
     parser.add_argument('command', choices=['check','install','uninstall'], nargs='?', default='check')
     parser.add_argument('--app', help='Codex resources/app.asar 的实际路径')
     parser.add_argument('--codex-home', default=os.environ.get('CODEX_HOME', str(Path.home()/'.codex')))
