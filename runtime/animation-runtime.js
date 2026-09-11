@@ -19,19 +19,17 @@ function nfPosition(frame, spec) {
 function nfPetRenderer(props) {
   const {source, className, state = "idle", respondToHover = false, lookFrame} = props;
   const spec = source.animationSpec;
-  const [hovered, setHovered] = Ger.useState(false);
-  const reducedMotion = VLe();
-  const current = Ger.useRef(null);
-  const previous = Ger.useRef(null);
-  const snapshot = Ger.useRef(null);
-  const drag = Ger.useRef(null);
-  const pointer = Ger.useRef(null);
-  const sustain = Ger.useRef(null);
-  const transition = Ger.useRef(null);
-  const previousRequested = Ger.useRef(null);
-  const [dragActive,setDragActive] = Ger.useState(false);
+  const [hovered, setHovered] = __NF_REACT__.useState(false);
+  const reducedMotion = __NF_REDUCED_MOTION__();
+  const current = __NF_REACT__.useRef(null);
+  const previous = __NF_REACT__.useRef(null);
+  const snapshot = __NF_REACT__.useRef(null);
+  const drag = __NF_REACT__.useRef(null);
+  const pointer = __NF_REACT__.useRef(null);
+  const sustain = __NF_REACT__.useRef(null);
+  const [dragActive,setDragActive] = __NF_REACT__.useState(false);
   const action = dragActive ? '$drag' : respondToHover && hovered ? "jumping" : state;
-  Ger.useEffect(() => {
+  __NF_REACT__.useEffect(() => {
     if (!spec.drag) return;
     const release = event => {
       if (pointer.current === null || (event.type !== 'blur' && event.pointerId !== pointer.current)) return;
@@ -43,17 +41,12 @@ function nfPetRenderer(props) {
     for(const type of types)window.addEventListener(type,release,true);
     return () => {for(const type of types)window.removeEventListener(type,release,true);};
   },[spec,reducedMotion]);
-  Ger.useEffect(() => {
+  __NF_REACT__.useEffect(() => {
     const node = current.current, old = previous.current;
     if (!node || !old) return;
     const before = snapshot.current;
     const start = performance.now();
     let normalStart = start;
-    const transitionKey = `${previousRequested.current||''}->${action}`;
-    if (spec.transitions?.[transitionKey] && action !== '$drag') {
-      transition.current = {from:previousRequested.current,to:action,animation:spec.transitions[transitionKey],start};
-    }
-    previousRequested.current = action;
     // User interactions take precedence; task-state changes let the thinking
     // gesture finish naturally. The controller survives effect rerenders.
     if (!spec.sustain || reducedMotion || action === '$drag' ||
@@ -71,20 +64,13 @@ function nfPetRenderer(props) {
         drag.current=null;setDragActive(false);
         return;
       }
-      let transitionFrame = null;
-      if (transition.current) {
-        const tr=transition.current, animation=spec.states[tr.animation];
-        const length=animation.frames.reduce((n,f)=>n+f.durationMs,0);
-        if (now-tr.start < length) transitionFrame=nfFrameAt(spec,tr.animation,now-tr.start);
-        else transition.current=null;
-      }
-      let thinking = !transitionFrame && sustain.current ? nfSustainFrame(spec, sustain.current, action, now) : null;
+      let thinking = sustain.current ? nfSustainFrame(spec, sustain.current, action, now) : null;
       if (sustain.current && !thinking) {
         sustain.current = null;
         normalStart = now;
         elapsed = 0;
       }
-      const frame = dragged || transitionFrame || thinking || (!spec.disableLook && lookFrame
+      const frame = dragged || thinking || (!spec.disableLook && lookFrame
         ? {row: lookFrame.rowIndex, column: lookFrame.columnIndex, stateKey: "look"}
         : nfFrameAt(spec, action, reducedMotion ? 0 : elapsed));
       const position = nfPosition(frame, spec);
@@ -114,8 +100,8 @@ function nfPetRenderer(props) {
     backgroundSize: `${spec.columns * 100}% ${spec.rows * 100}%`,
     backgroundRepeat: "no-repeat", imageRendering: "auto", pointerEvents: "none"
   };
-  return Ger.createElement("div", {
-    className: K(Uer.Root, className),
+  return __NF_REACT__.createElement("div", {
+    className: __NF_CLASSNAMES__(__NF_PET_STYLES__.Root, className),
     "data-codex-pet-id": source.petId,
     "data-codex-pet-state": action,
     "data-local-animation-version": "1",
@@ -130,8 +116,8 @@ function nfPetRenderer(props) {
       setDragActive(true);
     },
     style: {position: "relative", backgroundImage: "none", imageRendering: "auto"}
-  }, Ger.createElement("div", {ref: current, style: {...layer}}),
-     Ger.createElement("div", {ref: previous, style: {...layer, opacity: 0}}));
+  }, __NF_REACT__.createElement("div", {ref: current, style: {...layer}}),
+     __NF_REACT__.createElement("div", {ref: previous, style: {...layer, opacity: 0}}));
 }
 
 // A sustained gesture plays its introduction once, loops only the middle,

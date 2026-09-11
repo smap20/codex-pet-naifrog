@@ -1,9 +1,17 @@
 {
   "passed": true,
-  "platform": "linux",
-  "appVersion": "26.903.61454",
-  "originalAppSha256": "43d2e0e6d8cc1796a675f769c04f09038cdb0d1922ad358f852027979e9bd8ff",
-  "installedAppSha256": "f0b6db965d022705f85fadec54296f6cdb3e2293f748230d260c278b6a176d5e",
+  "platforms": ["linux", "macos-arm64"],
+  "appVersions": ["26.903.61454", "26.903.71938", "26.908.31748"],
+  "originalAppSha256": {
+    "linux-26.903.61454": "43d2e0e6d8cc1796a675f769c04f09038cdb0d1922ad358f852027979e9bd8ff",
+    "macos-26.903.71938": "58fef82480b9064e209b5b2fd934992e8d71515aea8084482369cfeaff1b8ee0",
+    "macos-26.908.31748": "c388f239a8e8e6af18612fad04f3b89456ea3d731e0ecaecc42ea389ddc269d6"
+  },
+  "installedAppSha256": {
+    "linux-26.903.61454": "f0b6db965d022705f85fadec54296f6cdb3e2293f748230d260c278b6a176d5e",
+    "macos-26.903.71938": "46318beb84f148f0de87640dfc8d28f842780bcddf7acdedf8a02ce32eaf910a",
+    "macos-26.908.31748": "6dfe234bd2851ecdd43d93b2fbc1a149d8ac6e899aed05a555cd43c98a7c8e95"
+  },
   "atlasSha256": "48bc3dbbe68823d9f3e3063180c95fe934b623f04e9628c293bda4adea39c898",
   "checks": [
     "Read-only compatibility check; paths containing spaces and Chinese",
@@ -17,7 +25,10 @@
     "v4.4 upgrade, failed-upgrade rollback, and two-level uninstall preserve original backups and records",
     "Unknown App fingerprint rejected without creating home/state or changing App",
     "Corrupt package payload rejected",
+    "Both macOS App fixtures rebuild to deterministic known-good ASAR fingerprints",
+    "macOS side-by-side transaction updates Electron integrity and passes deep strict codesign verification",
+    "macOS repeated install is idempotent and uninstall restores the previous pet without changing the official App",
     "All installation tests isolated; active App and pet unchanged"
   ],
-  "scope": "Real original Linux app.asar; exact patch rebuild, sandbox installation and restoration. Friend desktop after restart not verified."
+  "scope": "Real original Linux and macOS app.asar fixtures; exact patch rebuild, macOS bundle signing, sandbox installation and restoration. Interactive desktop behavior after restart is not automated."
 }
