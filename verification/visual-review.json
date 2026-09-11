@@ -1,0 +1,64 @@
+{
+  "verdict": "pass",
+  "reviewer": "v44_final_qa",
+  "reviewedAt": "2026-09-11T05:46:10.737526+00:00",
+  "atlasSha256": "48bc3dbbe68823d9f3e3063180c95fe934b623f04e9628c293bda4adea39c898",
+  "scope": "Independent final visual acceptance of an existing source-video matte repair; no generated or redrawn imagery.",
+  "personallyInspected": [
+    {
+      "range": "legacy-laugh 409–454 inclusive (all 46 frames)",
+      "method": "Four freshly generated source RGB/current RGBA side-by-side contact sheets, checkerboard composite",
+      "verdict": "pass",
+      "finding": "The newly retained floor shadow is absent. Bottom silhouette, hands, feet and side-eye details remain consistent with source; no new body loss is visible."
+    },
+    {
+      "range": "Final packaged jumping/laugh frames 128, 135, 0, 215, 456, 420, 425, 430",
+      "method": "Decoded animation-v4.4.webp; cropped exact 192×208 cells using adjacent animation JSON frames",
+      "verdict": "pass",
+      "finding": "Hands, toe tips and green side eyes are readable and intact at actual cell size. All eight cells have zero nontransparent edge pixels; no cell clipping."
+    },
+    {
+      "range": "Final running/scratch preview frames 16, 28, 60, 67; final running-right/float preview frames 0, 9, 52, 66, 75, 88",
+      "method": "Frame extraction from final animated WebP previews at 192×208; preview file hashes checked unchanged after ready notice",
+      "verdict": "pass",
+      "finding": "Pupils/irises remain opaque and readable through head and body movement, including floating apex frame 52."
+    }
+  ],
+  "inheritedPriorIndependentQA": {
+    "evidence": "qa/prior-independent-review.json",
+    "reviewer": "v44_matte_qa",
+    "ranges": [
+      "All seven MyNaiwa source clips, including scratch 0–79, float 0–88 and dizzy 0–123",
+      "All legacy-laugh 0–461 source/current frames except the subsequently corrected lying-shadow defect",
+      "Detailed hands 115–155, raised-hand gaps 210–254, late pupils 420+ and feet"
+    ],
+    "qualification": "These full-clip reviews are inherited, not claimed as personally repeated by this reviewer. The sole inherited blocker, lying shadow 409–454, was independently rechecked on final source RGBA and passes."
+  },
+  "deterministicEvidence": {
+    "frameAudit": "frame-audit.json",
+    "passed": true,
+    "frameCount": 1401,
+    "manifestOnlyChangesAtlasPath": true,
+    "transformsUnchanged": true,
+    "allFrameMaxAlphaDropZero": true,
+    "previewAudit": "preview-audit.json",
+    "cellMetrics": "qa/final-independent/atlas-cell-metrics.json"
+  },
+  "acceptedSourceLimitations": [
+    "Float frames 65–75 contain original landing-dust gray toe overlays. They are source effects, not new matte errors, and are intentionally retained."
+  ],
+  "preservation": "Existing size, frame counts, timing and dragging behavior are retained; this visual review does not independently retest runtime dragging. Restoration uses original source pixels; no AI redraw.",
+  "artifacts": [
+    "qa/final-independent/lying-1.jpg",
+    "qa/final-independent/lying-2.jpg",
+    "qa/final-independent/lying-3.jpg",
+    "qa/final-independent/lying-4.jpg",
+    "qa/final-independent/atlas-key-cells.png",
+    "qa/final-independent/preview-eyes.png"
+  ],
+  "previewSha256": {
+    "running": "e56d5e699976eefb3e6e98d536ab8a4ded879420ea655f0b7cc70b368fae782c",
+    "running-right": "8cb9ce5e80aa8285ca42d1e2f33e9e895a13261cc7676f1d6ff886bf00e4f519"
+  },
+  "blockingFindings": []
+}

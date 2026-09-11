@@ -1,0 +1,65 @@
+[
+  {
+    "key": "listen",
+    "label": "聆听",
+    "path": "MyNaiWa/video/变声模式/聆听.mp4",
+    "sha": "0bd997a20b70d3cc6848cac66376cd0c10430f14",
+    "size": 1397872,
+    "commit": "1f11260996f5fd1466316ba9b97941a8096c80c3",
+    "unused": false
+  },
+  {
+    "key": "talk",
+    "label": "说话",
+    "path": "MyNaiWa/video/变声模式/说话.mp4",
+    "sha": "15c3f65b9a0b896946120e1839f4f2ad036b2bf4",
+    "size": 3255359,
+    "commit": "1f11260996f5fd1466316ba9b97941a8096c80c3",
+    "unused": false
+  },
+  {
+    "key": "scratch",
+    "label": "挠头",
+    "path": "MyNaiWa/video/挠头.mp4",
+    "sha": "e1e67677a72e753cfb1ac7570107f23d0ec34dde",
+    "size": 3585527,
+    "commit": "1f11260996f5fd1466316ba9b97941a8096c80c3",
+    "unused": false
+  },
+  {
+    "key": "belly",
+    "label": "摸肚子",
+    "path": "MyNaiWa/video/摸肚子.mp4",
+    "sha": "7cb57682b9626c676851e4efda5391f61cd94678",
+    "size": 5880109,
+    "commit": "1f11260996f5fd1466316ba9b97941a8096c80c3",
+    "unused": false
+  },
+  {
+    "key": "float",
+    "label": "腿与脚-浮起来",
+    "path": "MyNaiWa/video/腿与脚-浮起来.mp4",
+    "sha": "d73d73f24e0e1388828b644596761f34cfc3bf96",
+    "size": 4019298,
+    "commit": "1f11260996f5fd1466316ba9b97941a8096c80c3",
+    "unused": false
+  },
+  {
+    "key": "idle",
+    "label": "静默",
+    "path": "MyNaiWa/video/静默.mp4",
+    "sha": "d70d4518ee9901c8baddf28df56456b39fb94d05",
+    "size": 14160011,
+    "commit": "1f11260996f5fd1466316ba9b97941a8096c80c3",
+    "unused": false
+  },
+  {
+    "key": "dizzy",
+    "label": "摇晃眩晕",
+    "path": "Unused/可配动作/摇晃眩晕.mp4",
+    "sha": "c882cd427e5e1de139420abce7fcb4b0026a0b17",
+    "size": 5548848,
+    "commit": "1f11260996f5fd1466316ba9b97941a8096c80c3",
+    "unused": true
+  }
+]

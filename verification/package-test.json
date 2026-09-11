@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "platform": "linux",
+  "appVersion": "26.903.61454",
+  "originalAppSha256": "43d2e0e6d8cc1796a675f769c04f09038cdb0d1922ad358f852027979e9bd8ff",
+  "installedAppSha256": "c6f78ad4dd35b8429b07bc258f5b45e1990982d93fed72242ecc1e7766d14dff",
+  "atlasSha256": "48bc3dbbe68823d9f3e3063180c95fe934b623f04e9628c293bda4adea39c898",
+  "checks": [
+    "Read-only compatibility check; paths containing spaces and Chinese",
+    "Fresh original App installation produces byte-identical known-good App and v4.4 assets",
+    "Repeated installation is idempotent and keeps original backup",
+    "Uninstall refuses to overwrite later pet changes",
+    "Uninstall restores original App and previous pet exactly; repeated uninstall is harmless",
+    "Injected failure after App patch rolls back both App and displaced pet",
+    "Install/uninstall with no previous pet restores directory absence",
+    "Existing known-good player retained on install and uninstall",
+    "Unknown App fingerprint rejected without creating home/state or changing App",
+    "Corrupt package payload rejected",
+    "All installation tests isolated; active App and pet unchanged"
+  ],
+  "scope": "Real original Linux app.asar; exact patch rebuild, sandbox installation and restoration. Friend desktop after restart not verified."
+}

@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "checks": [
+    "Actual App parser and validated optional drag configuration",
+    "Backward compatibility with v4.1",
+    "All state frame boundaries and persistent loops",
+    "Rise then hold apex for one hour without looping",
+    "Release plays original descent",
+    "Early release reverses partial lift without teleport",
+    "Regrab during descent resumes from current frame",
+    "Exact renderer effects retain hold across left/right and Codex state changes",
+    "Pointerup outside sprite, wrong pointer ID, cancel, lost capture, window blur",
+    "Latest Codex state restored after landing",
+    "Reduced motion and event/RAF cleanup"
+  ],
+  "uiVerification": "No live post-restart App verification"
+}
