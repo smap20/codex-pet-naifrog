@@ -44,10 +44,10 @@ class InstallerTests(unittest.TestCase):
         linux = install.BUILD_SPECS[0]
         self.assertEqual(
             hashlib.sha256(install.render_runtime('animation-loader.js', linux).encode()).hexdigest(),
-            '5e84bdc3c47bddde8f77bc377225692f829e3d5172c7166d8fb6c77a5fad5bd6')
+            '0ac19d05d0ff8edafedb990f6c2ddb65ec4aa41594a54bd11cdb6aa7d3c6907f')
         self.assertEqual(
             hashlib.sha256(install.render_runtime('animation-runtime.js', linux).encode()).hexdigest(),
-            '4b8a4343c0d8b43827ed450e83df2a2365454c9ac5917fe88a21e3e1d2136e6f')
+            'cb68e4ee77c4bca3c4e9a58105b08a6f54749add51bcae6e8b5f109c688b90bf')
 
     def test_specs_are_platform_and_fingerprint_specific(self):
         for spec in install.BUILD_SPECS:

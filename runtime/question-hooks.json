@@ -1,0 +1,8 @@
+{
+  "let{answersByQuestionItemId:i}=WXn(n.items),a=BXn(n.items);ty(e,()=>{": "let{answersByQuestionItemId:i}=WXn(n.items),a=BXn(n.items);nfInputChange(\"sync\",t,n.status===`inProgress`?a.filter(q=>!i.has(q.id)&&e.get(rP,{...t,itemId:q.id})?.lastSubmission==null&&!e.get(rP,{...t,itemId:q.id})?.isSkipped).map(q=>q.id):[]);ty(e,()=>{",
+  "function Qsr(e,t,n){": "function Qsr(e,t,n){if(e.get(rP,t)?.lastSubmission==null&&!e.get(rP,t)?.isSkipped){Zsr(e,t);return;}",
+  "function qsr(e,t,n,r,i,a){": "function qsr(e,t,n,r,i,a){nfInputChange(\"open\",t,n.map(q=>q.id));",
+  "function Xsr(e,t,n){": "function Xsr(e,t,n){if(n!==e.get(rP,t)?.draft)nfInputChange(\"type\",t);",
+  "function $sr(e,t){": "function $sr(e,t){nfInputChange(\"close\",t);",
+  "function tcr(e,t,n){": "function tcr(e,t,n){nfInputChange(\"close\",t,n.map(q=>q.questionItemId));"
+}

@@ -76,6 +76,14 @@ BUILD_SPECS = [
 ]
 
 
+# macOS adapters remain available for future porting, but latest question hooks
+# have only been verified against the Linux build.
+MACOS_ADAPTERS = [x for x in BUILD_SPECS if x['platform'] == 'darwin']
+BUILD_SPECS = [x for x in BUILD_SPECS if x['platform'] == 'linux']
+BUILD_SPECS[0]['previous'] = None
+BUILD_SPECS[0]['patched'] = 'd3fa96178adc15ac1e8add704e9c5e9b96bcf3a89bb1993fc8872ceffb87ac15'
+BUILD_SPECS[0]['members'].update(json.loads((BUNDLE / 'runtime/extra-members.json').read_text()))
+
 class InstallError(Exception):
     pass
 
@@ -206,10 +214,18 @@ def patch_members(archive, spec, archive_digest=None):
                spec['renderer'] + '=props=>props.source?.animationSpec?' + spec['react'] +
                '.createElement(nfPetRenderer,props):' + spec['react'] +
                '.createElement(nfOriginal,props)}));\n' +
-               render_runtime('animation-runtime.js', spec) + '\nfunction ' +
+               render_runtime('input-bridge.js', spec) + '\n' + render_runtime('animation-runtime.js', spec) + '\nfunction ' +
                spec['next_function'] + '(')
     ui = once(ui, tail, wrapper)
-    return {spec['loader_member']: loader.encode(), spec['ui_member']: ui.encode()}
+    hooks = json.loads((BUNDLE / 'runtime/question-hooks.json').read_text())
+    for before, after in hooks.items():
+        ui = once(ui, before, after)
+    result = {spec['loader_member']: loader.encode(), spec['ui_member']: ui.encode()}
+    for member, before, after in [
+        ('webview/assets/avatar-mascot-button-f61a6e3fe6ad.js', 'ne?`jumping`:u', 'ne?(s.animationSpec?`waving`:`jumping`):u'),
+        ('webview/assets/profile-720b5ad88b98.js', 'let l=r?`jumping`:`idle`', 'let l=r?(c.animationSpec?`waving`:`jumping`):`idle`')]:
+        result[member] = once(originals[member].decode(), before, after).encode()
+    return result
 
 
 def build_archive(source, destination, spec, verify_result=True):
@@ -429,7 +445,7 @@ def install_linux(app, home):
                     previous['app'] == str(app) and previous['pet'] == str(pet),
                     '上次安装使用了其他路径；请先卸载该次安装。')
             if info['sha256'] == spec['patched'] and tree_hashes(pet) == desired:
-                print('已安装同一版奶蛙 v4.5，无需重复操作。')
+                print('已安装同一版奶蛙 v4.6.1，无需重复操作。')
                 return previous
             require(previous.get('revision') == 'v4.4' and info['sha256'] == spec.get('previous') and
                     tree_hashes(pet) == previous['installedPetFiles'],
@@ -447,7 +463,7 @@ def install_linux(app, home):
     stage = pet.with_name('naifrog-stage-' + uuid.uuid4().hex)
     displaced = pet.with_name('naifrog-previous-' + uuid.uuid4().hex)
     record = {
-        'status': 'prepared', 'mode': 'linux-in-place', 'revision': 'v4.5',
+        'status': 'prepared', 'mode': 'linux-in-place', 'revision': 'v4.6.1',
         'build': spec['id'], 'app': str(app), 'pet': str(pet), 'backup': str(backup),
         'beforeAppSha256': info['sha256'], 'installedAppSha256': spec['patched'],
         'hadPet': had_pet, 'beforePetFiles': original_pet, 'installedPetFiles': desired,
@@ -589,7 +605,7 @@ def install_macos(app, home, target_app=None):
                               previous['installedAsarIntegrity'])
             require(tree_hashes(pet) == desired,
                     '安装后的宠物已改变；请保留现状并检查 installed.json。')
-            print('已安装同一版奶蛙 v4.5，无需重复操作。')
+            print('已安装同一版奶蛙 v4.6.1，无需重复操作。')
             return previous
         prior_state = previous.get('previousInstallation')
     require(not target.exists(), '目标 App 已存在；为避免覆盖，请先移走它或更换 --target-app：' + str(target))
@@ -607,7 +623,7 @@ def install_macos(app, home, target_app=None):
     app_stage = target.with_name('.' + target.name + '.naifrog-' + uuid.uuid4().hex + '.stage')
     display_name = source_bundle.stem + ' 奶蛙'
     record = {
-        'status': 'prepared', 'mode': 'macos-side-by-side', 'revision': 'v4.5',
+        'status': 'prepared', 'mode': 'macos-side-by-side', 'revision': 'v4.6.1',
         'build': spec['id'], 'sourceBundle': str(source_bundle), 'targetBundle': str(target),
         'app': str(target / 'Contents/Resources/app.asar'), 'pet': str(pet), 'backup': str(backup),
         'beforeAppSha256': info['sha256'], 'installedAppSha256': spec['patched'],
@@ -773,7 +789,7 @@ def uninstall(home):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='奶蛙 v4.5 Linux / macOS 离线安装包')
+    parser = argparse.ArgumentParser(description='奶蛙 v4.6.1 Linux / macOS 离线安装包')
     parser.add_argument('command', choices=['check', 'install', 'uninstall'], nargs='?', default='check')
     parser.add_argument('--app', help='Codex/ChatGPT .app 或 resources/app.asar 的实际路径')
     parser.add_argument('--target-app', help='macOS 独立奶蛙 App 的目标路径（默认 ~/Applications）')

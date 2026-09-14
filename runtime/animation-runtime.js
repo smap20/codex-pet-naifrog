@@ -1,5 +1,9 @@
 // Optional per-pet extension. No changes to the built-in animation tables.
 function nfFrameAt(spec, state, elapsed) {
+  if (state === '$question') {
+    const a=spec.states.jumping, f=a.frames[30];
+    return {...f,row:f.row ?? a.row,stateKey:'$question'};
+  }
   const stateKey = spec.states[state] ? state : "idle";
   const action = spec.states[stateKey];
   const length = action.frames.reduce((n, f) => n + f.durationMs, 0);
@@ -19,6 +23,8 @@ function nfPosition(frame, spec) {
 function nfPetRenderer(props) {
   const {source, className, state = "idle", respondToHover = false, lookFrame} = props;
   const spec = source.animationSpec;
+  const input = nfUseInput();
+  const inputSequence = __NF_REACT__.useRef(input.sequence);
   const [hovered, setHovered] = __NF_REACT__.useState(false);
   const reducedMotion = __NF_REDUCED_MOTION__();
   const current = __NF_REACT__.useRef(null);
@@ -27,8 +33,10 @@ function nfPetRenderer(props) {
   const drag = __NF_REACT__.useRef(null);
   const pointer = __NF_REACT__.useRef(null);
   const sustain = __NF_REACT__.useRef(null);
+  const transition = __NF_REACT__.useRef(null);
+  const previousRequested = __NF_REACT__.useRef(null);
   const [dragActive,setDragActive] = __NF_REACT__.useState(false);
-  const action = dragActive ? '$drag' : respondToHover && hovered ? "waving" : state;
+  const action = dragActive ? '$drag' : respondToHover && hovered ? "waving" : input.pending.length ? "$question" : state;
   __NF_REACT__.useEffect(() => {
     if (!spec.drag) return;
     const release = event => {
@@ -47,6 +55,11 @@ function nfPetRenderer(props) {
     const before = snapshot.current;
     const start = performance.now();
     let normalStart = start;
+    if(input.sequence !== inputSequence.current){
+      inputSequence.current=input.sequence;
+      transition.current={animation:'jumping',start};
+    }
+    previousRequested.current = action;
     // User interactions take precedence; task-state changes let the thinking
     // gesture finish naturally. The controller survives effect rerenders.
     if (!spec.sustain || reducedMotion || action === '$drag' ||
@@ -64,13 +77,20 @@ function nfPetRenderer(props) {
         drag.current=null;setDragActive(false);
         return;
       }
-      let thinking = sustain.current ? nfSustainFrame(spec, sustain.current, action, now) : null;
+      let transitionFrame = null;
+      if (transition.current) {
+        const tr=transition.current, animation=spec.states[tr.animation];
+        const length=animation.frames.reduce((n,f)=>n+f.durationMs,0);
+        if (now-tr.start < length) transitionFrame=nfFrameAt(spec,tr.animation,now-tr.start);
+        else transition.current=null;
+      }
+      let thinking = !transitionFrame && sustain.current ? nfSustainFrame(spec, sustain.current, action, now) : null;
       if (sustain.current && !thinking) {
         sustain.current = null;
         normalStart = now;
         elapsed = 0;
       }
-      const frame = dragged || thinking || (!spec.disableLook && lookFrame
+      const frame = dragged || transitionFrame || thinking || (!spec.disableLook && lookFrame
         ? {row: lookFrame.rowIndex, column: lookFrame.columnIndex, stateKey: "look"}
         : nfFrameAt(spec, action, reducedMotion ? 0 : elapsed));
       const position = nfPosition(frame, spec);
@@ -94,7 +114,7 @@ function nfPetRenderer(props) {
     };
     draw(start);
     return () => cancelAnimationFrame(raf);
-  }, [spec, action, reducedMotion, spec.disableLook ? null : lookFrame]);
+  }, [spec, action, input.sequence, reducedMotion, spec.disableLook ? null : lookFrame]);
   const layer = {
     position: "absolute", inset: 0, backgroundImage: `url(${spec.spritesheetDataUrl})`,
     backgroundSize: `${spec.columns * 100}% ${spec.rows * 100}%`,
